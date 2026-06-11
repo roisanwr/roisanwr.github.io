@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import ParticleBackground from "@/components/ParticleBackground";
+import ScrollProgress from "@/components/ScrollProgress";
+import CustomCursor from "@/components/CustomCursor";
 import HeroSection from "@/components/HeroSection";
 import ProfileSection from "@/components/ProfileSection";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -11,16 +12,21 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
+      {/* Global UI chrome */}
+      <CustomCursor />
+      <ScrollProgress />
       <Navbar />
       <Sidebar />
-      <main className="max-w-6xl mx-auto px-6 md:px-24">
-        <ParticleBackground />
+
+      {/* Page content */}
+      <main>
         <HeroSection />
         <ProfileSection />
         <ExperienceSection />
         <ProjectsSection />
         <ContactSection />
       </main>
+
       <Footer />
     </>
   );

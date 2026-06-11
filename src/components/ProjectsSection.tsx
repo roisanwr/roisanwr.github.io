@@ -1,114 +1,260 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { workData } from "@/config/data";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
-import { clsx } from "clsx";
+
+interface Project {
+  title: string;
+  isFeatured: boolean;
+  description: string;
+  tech: string[];
+  githubLink: string;
+  externalLink: string;
+  image: string;
+}
+
+function ProjectRow({ project, index }: { project: Project; index: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          borderBottom: "1px solid var(--c-border)",
+          overflow: "hidden",
+          transition: "background 0.3s",
+          background: hovered ? "var(--c-surface)" : "transparent",
+        }}
+        className="md:grid-cols-[1fr_360px]"
+      >
+        {/* Left: info */}
+        <div
+          style={{
+            padding: "2.5rem 2.5rem 2.5rem 0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: "1.5rem",
+          }}
+        >
+          <div>
+            {/* Number + title row */}
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1rem", marginBottom: "1rem" }}>
+              <span
+                className="label"
+                style={{ color: "var(--c-text-3)", minWidth: "2ch" }}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3
+                className="font-display"
+                style={{
+                  fontSize: "clamp(1.8rem, 4vw, 3rem)",
+                  color: hovered ? "var(--c-accent)" : "var(--c-text)",
+                  letterSpacing: "0.02em",
+                  lineHeight: 1,
+                  transition: "color 0.25s",
+                }}
+              >
+                {project.title}
+              </h3>
+            </div>
+
+            <p
+              className="font-body"
+              style={{
+                fontSize: "0.9rem",
+                lineHeight: 1.75,
+                color: "var(--c-text-2)",
+                maxWidth: "520px",
+              }}
+            >
+              {project.description}
+            </p>
+          </div>
+
+          {/* Bottom row */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+            {/* Tech badges */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
+              {project.tech.slice(0, 4).map((t) => (
+                <span key={t} className="badge">{t}</span>
+              ))}
+            </div>
+            {/* Links */}
+            <div style={{ display: "flex", gap: "1rem" }}>
+              {project.githubLink && project.githubLink !== "#" && (
+                <a
+                  href={project.githubLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "var(--c-text-3)", transition: "color 0.2s", display: "flex" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-text-3)")}
+                >
+                  <FaGithub size={18} />
+                </a>
+              )}
+              {project.externalLink && project.externalLink !== "#" && (
+                <a
+                  href={project.externalLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "var(--c-text-3)", transition: "color 0.2s", display: "flex" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-text-3)")}
+                >
+                  <FaExternalLinkAlt size={16} />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right: image */}
+        <div
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            display: "none",
+            minHeight: "260px",
+          }}
+          className="md:block"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={project.image}
+            alt={project.title}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              transform: hovered ? "scale(1.06)" : "scale(1)",
+              filter: hovered ? "grayscale(0)" : "grayscale(0.5)",
+              transition: "transform 0.7s cubic-bezier(0.22,1,0.36,1), filter 0.5s",
+            }}
+          />
+          {/* Dark overlay with featured badge */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(9,9,14,0.4)",
+              display: "flex",
+              alignItems: "flex-start",
+              padding: "1rem",
+              opacity: hovered ? 0 : 1,
+              transition: "opacity 0.3s",
+            }}
+          >
+            {project.isFeatured && (
+              <span
+                style={{
+                  fontFamily: "var(--font-space-grotesk)",
+                  fontSize: "0.6rem",
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  background: "var(--c-accent)",
+                  color: "var(--c-bg)",
+                  padding: "0.2rem 0.55rem",
+                  fontWeight: 600,
+                }}
+              >
+                Featured
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function ProjectsSection() {
-  return (
-    <motion.section
-      initial={{ y: 80, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.1 }}
-      className="py-24 md:py-32 scroll-mt-20"
-      id="work"
-    >
-      <div className="flex items-center gap-4 mb-14">
-        <h3 className="text-2xl md:text-3xl font-bold text-[#334155] dark:text-[#F1F5F9] flex items-center">
-          <span className="font-mono text-[#4F46E5] dark:text-[#818CF8] text-xl mr-2">
-            03.
-          </span>{" "}
-          Some Things I’ve Built
-        </h3>
-        <div className="h-[1px] bg-[#E2E8F0] dark:bg-[#334155] flex-grow"></div>
-      </div>
-      <div className="space-y-24 md:space-y-40">
-        {workData.map((project, i) => {
-          const isLeft = i % 2 !== 0; // Alternating layout
-          return (
-            <div
-              key={project.title}
-              className="relative grid md:grid-cols-12 gap-4 items-center"
-            >
-              {/* Image */}
-              <div
-                className={clsx(
-                  "md:col-span-7 relative group",
-                  isLeft ? "md:col-start-6" : ""
-                )}
-              >
-                <div className="absolute inset-0 bg-[#4F46E5]/30 dark:bg-[#818CF8]/30 group-hover:bg-transparent transition-all duration-300 rounded-lg z-10"></div>
-                <img
-                  alt={project.title}
-                  className="rounded-lg shadow-xl object-cover w-full h-full"
-                  src={project.image}
-                />
-              </div>
+  const headerRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
-              {/* Text Content */}
-              <div
-                className={clsx(
-                  "md:col-span-6 z-20 space-y-4",
-                  isLeft
-                    ? "md:absolute md:left-0 text-left"
-                    : "md:col-start-7 md:absolute md:right-0 text-right"
-                )}
-              >
-                <p className="font-mono text-[#4F46E5] dark:text-[#818CF8] text-xs">
-                  {project.isFeatured ? "Featured Project" : "Project"}
-                </p>
-                <h4 className="text-2xl md:text-3xl font-bold text-[#334155] dark:text-[#F1F5F9] hover:text-[#4F46E5] dark:hover:text-[#818CF8] cursor-pointer transition-colors">
-                  {project.title}
-                </h4>
-                <div className="bg-white dark:bg-[#1E293B] p-6 rounded-lg shadow-lg dark:shadow-2xl border border-[#F1F5F9] dark:border-none relative z-30">
-                  <p className="text-[#64748B] dark:text-[#94A3B8]">
-                    {project.description}
-                  </p>
-                </div>
-                <ul
-                  className={clsx(
-                    "flex flex-wrap gap-4 font-mono text-xs text-[#334155] dark:text-[#F1F5F9]",
-                    isLeft ? "justify-start" : "justify-end"
-                  )}
-                >
-                  {project.tech.map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-                <div
-                  className={clsx(
-                    "flex gap-6 text-[#334155] dark:text-[#F1F5F9]",
-                    isLeft ? "justify-start" : "justify-end"
-                  )}
-                >
-                  {project.githubLink && (
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="cursor-pointer hover:text-[#4F46E5] dark:hover:text-[#818CF8] transition-colors"
-                    >
-                      <FaGithub size={20} />
-                    </a>
-                  )}
-                  {project.externalLink && (
-                    <a
-                      href={project.externalLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="cursor-pointer hover:text-[#4F46E5] dark:hover:text-[#818CF8] transition-colors"
-                    >
-                      <FaExternalLinkAlt size={18} />
-                    </a>
-                  )}
-                </div>
-              </div>
+  return (
+    <section id="work" className="scroll-mt-20" style={{ padding: "6rem 0", borderTop: "1px solid var(--c-border)" }}>
+      <div className="container">
+        {/* Header */}
+        <motion.div
+          ref={headerRef}
+          initial={{ opacity: 0, y: 28 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <span className="label" style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "1rem" }}>
+            <span style={{ display: "block", width: "32px", height: "1px", background: "var(--c-accent)" }} />
+            Selected Work
+          </span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              flexWrap: "wrap",
+              gap: "1rem",
+              marginBottom: "4rem",
+            }}
+          >
+            <h2
+              className="font-display"
+              style={{
+                fontSize: "clamp(3rem, 8vw, 7rem)",
+                color: "var(--c-text)",
+                letterSpacing: "0.02em",
+                lineHeight: 0.95,
+              }}
+            >
+              Things I&apos;ve<br />
+              built<span style={{ color: "var(--c-accent)", fontFamily: "var(--font-dm-sans), sans-serif", fontSize: "0.75em", verticalAlign: "middle" }}>•</span>
+            </h2>
+            <a
+              href="https://github.com/roisanwr"
+              target="_blank"
+              rel="noreferrer"
+              className="mag-btn"
+              style={{ flexShrink: 0, alignSelf: "flex-end" }}
+            >
+              <span>View all →</span>
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Project list */}
+        <div style={{ borderTop: "1px solid var(--c-border)" }}>
+          {workData.length === 0 ? (
+            <div
+              style={{
+                padding: "4rem 0",
+                textAlign: "center",
+                color: "var(--c-text-3)",
+              }}
+            >
+              <p className="label">Projects coming soon</p>
             </div>
-          );
-        })}
+          ) : (
+            workData.map((project, i) => (
+              <ProjectRow key={project.title} project={project} index={i} />
+            ))
+          )}
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

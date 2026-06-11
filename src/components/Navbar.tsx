@@ -2,77 +2,251 @@
 
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/data";
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { Moon, Sun } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
-function cn(...inputs: (string | undefined | null | false)[]) {
-  return twMerge(clsx(inputs));
-}
+const NAV_LINKS = siteConfig.navLinks;
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isDark, setIsDark] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
+  /* ── Hydration + theme bootstrap ── */
   useEffect(() => {
     setMounted(true);
+    const saved = localStorage.getItem("theme");
+    // Default to dark if no preference saved
+    const dark = saved === "dark" || !saved;
+    document.documentElement.classList.toggle("dark", dark);
+    setIsDark(dark);
   }, []);
 
+  /* ── Scroll shadow ── */
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setShowNavbar(false);
-      } else {
-        setShowNavbar(true);
-      }
-      setLastScrollY(Math.max(0, currentScrollY));
-    };
+    const fn = () => setScrolled(window.scrollY > 30);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  /* ── Lock body ── */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+    setIsDark(next);
+  };
 
   if (!mounted) return null;
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 w-full z-40 bg-white/80 dark:bg-[#0B1120]/80 backdrop-blur-md flex justify-between items-center px-6 py-4 md:px-12 transition-transform duration-300 ease-in-out",
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      )}
-    >
-      <a
-        href="#"
-        className="group text-[#4F46E5] dark:text-[#818CF8] w-10 h-10 relative flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+    <>
+      {/* ─── Main Bar ─── */}
+      <header
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 900,
+          height: "64px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 2.5rem",
+          background: scrolled ? "var(--c-nav-bg)" : "transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
+          borderBottom: scrolled ? "1px solid var(--c-border)" : "1px solid transparent",
+          transition: "background 0.4s, border-color 0.4s",
+        }}
       >
-        <svg
-          viewBox="0 0 100 100"
-          className="absolute inset-0 w-full h-full fill-none stroke-current"
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        {/* Logo */}
+        <a
+          href="#"
+          style={{
+            fontFamily: "var(--font-bebas), sans-serif",
+            fontSize: "1.75rem",
+            letterSpacing: "0.05em",
+            color: "var(--c-text)",
+            textDecoration: "none",
+            lineHeight: 1,
+          }}
+          aria-label="Home"
         >
-          <polygon points="50 5, 90 27.5, 90 72.5, 50 95, 10 72.5, 10 27.5"></polygon>
-        </svg>
-        <span className="font-bold text-xl font-mono text-[#4F46E5] dark:text-[#818CF8]">
-          {siteConfig.name.charAt(0)}
-        </span>
-      </a>
-      <div className="hidden md:flex items-center gap-8">
-        {siteConfig.navLinks.map((link, i) => (
-          <a
-            key={link.name}
-            className="font-mono text-xs tracking-widest text-[#334155] dark:text-[#F1F5F9] hover:text-[#4F46E5] dark:hover:text-[#818CF8] transition-all duration-300"
-            href={link.href}
+          RA
+          <span style={{ color: "var(--c-accent)" }}>.</span>
+        </a>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex" style={{ alignItems: "center", gap: "2.5rem" }}>
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              style={{
+                fontFamily: "var(--font-space-grotesk), monospace",
+                fontSize: "0.65rem",
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "var(--c-text-2)",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-text-2)")}
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+
+        {/* Right controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              background: "none",
+              border: "1px solid var(--c-border-2)",
+              color: "var(--c-text-2)",
+              width: "34px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "none",
+              transition: "color 0.2s, border-color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--c-accent)";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--c-accent)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.color = "var(--c-text-2)";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--c-border-2)";
+            }}
           >
-            0{i + 1}. {link.name}
-          </a>
-        ))}
-        <button className="border border-[#4F46E5] dark:border-[#818CF8] text-[#4F46E5] dark:text-[#818CF8] px-4 py-2 font-mono text-xs rounded hover:bg-[#4F46E5]/10 dark:hover:bg-[#818CF8]/10 transition-all duration-300">
-          Resume
-        </button>
-      </div>
-    </nav>
+            {isDark ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
+
+          {/* Hamburger — mobile */}
+          <button
+            className="md:hidden"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            style={{
+              background: "none",
+              border: "1px solid var(--c-border-2)",
+              color: "var(--c-text)",
+              width: "34px",
+              height: "34px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "none",
+              gap: "0",
+              flexDirection: "column",
+              padding: "0 9px",
+            }}
+          >
+            <span style={{ display: "block", width: "100%", height: "1px", background: "currentColor", marginBottom: "5px" }} />
+            <span style={{ display: "block", width: "100%", height: "1px", background: "currentColor" }} />
+          </button>
+        </div>
+      </header>
+
+      {/* ─── Mobile Menu ─── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 950,
+              background: "var(--c-bg)",
+              display: "flex",
+              flexDirection: "column",
+              padding: "1.5rem 2rem 3rem",
+            }}
+          >
+            {/* Top row */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-bebas)",
+                  fontSize: "1.75rem",
+                  letterSpacing: "0.05em",
+                  color: "var(--c-text)",
+                }}
+              >
+                RA<span style={{ color: "var(--c-accent)" }}>.</span>
+              </span>
+              <button
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--c-text)",
+                  fontSize: "1.5rem",
+                  cursor: "none",
+                  lineHeight: 1,
+                  padding: "0.5rem",
+                }}
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Links */}
+            <nav style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: "0" }}>
+              {NAV_LINKS.map((link, i) => (
+                <motion.a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07 + 0.1, ease: [0.22, 1, 0.36, 1], duration: 0.5 }}
+                  style={{
+                    fontFamily: "var(--font-bebas)",
+                    fontSize: "clamp(3rem, 12vw, 5rem)",
+                    color: "var(--c-text-2)",
+                    textDecoration: "none",
+                    letterSpacing: "0.04em",
+                    lineHeight: 1.1,
+                    borderBottom: "1px solid var(--c-border)",
+                    padding: "0.6rem 0",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-text-2)")}
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+            </nav>
+
+            {/* Bottom */}
+            <p style={{ fontFamily: "var(--font-space-grotesk)", fontSize: "0.65rem", letterSpacing: "0.12em", color: "var(--c-text-3)", textTransform: "uppercase" }}>
+              {siteConfig.email}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

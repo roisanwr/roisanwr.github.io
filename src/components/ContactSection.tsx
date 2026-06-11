@@ -1,33 +1,125 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { contactData } from "@/config/data";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { contactData, siteConfig } from "@/config/data";
 
 export default function ContactSection() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
   return (
-    <motion.section
-      initial={{ y: 80, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      viewport={{ once: true, amount: 0.5 }}
-      className="py-24 md:py-48 text-center max-w-2xl mx-auto mb-20"
+    <section
       id="contact"
+      className="scroll-mt-20"
+      style={{
+        padding: "8rem 0",
+        borderTop: "1px solid var(--c-border)",
+        textAlign: "center",
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      <p className="font-mono text-[#4F46E5] dark:text-[#818CF8] text-sm mb-4">
-        {contactData.header}
-      </p>
-      <h2 className="text-4xl md:text-6xl font-bold text-[#334155] dark:text-[#F1F5F9] mb-6">
-        {contactData.title}
-      </h2>
-      <p className="text-[#64748B] dark:text-[#94A3B8] mb-12">
-        {contactData.description}
-      </p>
-      <a
-        className="inline-block border-2 border-[#4F46E5] dark:border-[#818CF8] text-[#4F46E5] dark:text-[#818CF8] px-10 py-5 font-mono text-sm rounded hover:bg-[#4F46E5]/10 dark:hover:bg-[#818CF8]/10 transition-all duration-300"
-        href={contactData.ctaLink}
-      >
-        {contactData.ctaText}
-      </a>
-    </motion.section>
+      {/* Subtle accent glow — very faint */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "500px",
+          height: "500px",
+          background: "radial-gradient(circle, var(--c-accent) 0%, transparent 70%)",
+          opacity: 0.04,
+          pointerEvents: "none",
+        }}
+      />
+
+      <div className="container" style={{ position: "relative" }} ref={ref}>
+        {/* Label */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="label"
+          style={{ justifyContent: "center", display: "flex", alignItems: "center", gap: "12px", marginBottom: "1.5rem" }}
+        >
+          <span style={{ display: "block", width: "32px", height: "1px", background: "var(--c-accent)" }} />
+          Get in touch
+          <span style={{ display: "block", width: "32px", height: "1px", background: "var(--c-accent)" }} />
+        </motion.div>
+
+        {/* Giant heading */}
+        <motion.h2
+          initial={{ opacity: 0, y: 32 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display"
+          style={{
+            fontSize: "clamp(4rem, 14vw, 14rem)",
+            lineHeight: 0.9,
+            color: "var(--c-text)",
+            letterSpacing: "0.02em",
+            marginBottom: "2rem",
+          }}
+        >
+          {contactData.title}
+          <span style={{ color: "var(--c-accent)", fontFamily: "var(--font-dm-sans), sans-serif", fontSize: "0.6em", verticalAlign: "middle" }}>•</span>
+        </motion.h2>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.25 }}
+          className="font-body"
+          style={{
+            fontSize: "1rem",
+            lineHeight: 1.8,
+            color: "var(--c-text-2)",
+            maxWidth: "480px",
+            margin: "0 auto 2.5rem",
+          }}
+        >
+          {contactData.description}
+        </motion.p>
+
+        {/* Email */}
+        <motion.a
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          href={`mailto:${siteConfig.email}`}
+          className="font-mono"
+          style={{
+            display: "inline-block",
+            fontSize: "clamp(0.8rem, 2vw, 1rem)",
+            letterSpacing: "0.08em",
+            color: "var(--c-accent)",
+            textDecoration: "none",
+            borderBottom: "1px solid var(--c-accent-bg)",
+            paddingBottom: "3px",
+            marginBottom: "3rem",
+            transition: "border-color 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--c-accent)")}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--c-accent-bg)")}
+        >
+          {siteConfig.email}
+        </motion.a>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.45 }}
+        >
+          <a href={contactData.ctaLink} className="btn-accent">
+            {contactData.ctaText}
+          </a>
+        </motion.div>
+      </div>
+    </section>
   );
 }

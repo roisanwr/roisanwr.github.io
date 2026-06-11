@@ -1,41 +1,91 @@
 "use client";
 
-import { useEffect } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
-  const mouseX = useMotionValue(-200);
-  const mouseY = useMotionValue(-200);
-
-  // Outer ring — lagging behind
-  const outerX = useSpring(mouseX, { damping: 20, stiffness: 200, mass: 0.6 });
-  const outerY = useSpring(mouseY, { damping: 20, stiffness: 200, mass: 0.6 });
-
-  // Inner dot — snappy
-  const dotX = useSpring(mouseX, { damping: 40, stiffness: 1000 });
-  const dotY = useSpring(mouseY, { damping: 40, stiffness: 1000 });
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Only run on pointer devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
+
+    let mx = -100, my = -100;
+    let rx = -100, ry = -100;
+    let raf: number;
+
     const onMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+      mx = e.clientX;
+      my = e.clientY;
+      dot.style.left = `${mx}px`;
+      dot.style.top = `${my}px`;
     };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY]);
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const tick = () => {
+      rx = lerp(rx, mx, 0.10);
+      ry = lerp(ry, my, 0.10);
+      ring.style.left = `${rx}px`;
+      ring.style.top  = `${ry}px`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    tick();
+    window.addEventListener("mousemove", onMove, { passive: true });
+
+    // Cursor states for hoverable elements
+    const onEnter = () => {
+      if (!dot || !ring) return;
+      dot.style.width = "12px";
+      dot.style.height = "12px";
+      ring.style.width = "52px";
+      ring.style.height = "52px";
+      ring.style.opacity = "1";
+    };
+
+    const onLeave = () => {
+      if (!dot || !ring) return;
+      dot.style.width = "8px";
+      dot.style.height = "8px";
+      ring.style.width = "36px";
+      ring.style.height = "36px";
+      ring.style.opacity = "0.6";
+    };
+
+    const hoverEls = document.querySelectorAll("a, button, [data-cursor='hover']");
+    hoverEls.forEach((el) => {
+      el.addEventListener("mouseenter", onEnter);
+      el.addEventListener("mouseleave", onLeave);
+    });
+
+    // Hide on canvas (3D area)
+    const hideCursor = () => { dot.style.opacity = "0"; ring.style.opacity = "0"; };
+    const showCursor = () => { dot.style.opacity = "1"; ring.style.opacity = "0.6"; };
+    const canvasEls = document.querySelectorAll("canvas");
+    canvasEls.forEach((c) => {
+      c.addEventListener("mouseenter", hideCursor);
+      c.addEventListener("mouseleave", showCursor);
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", onMove);
+      hoverEls.forEach((el) => {
+        el.removeEventListener("mouseenter", onEnter);
+        el.removeEventListener("mouseleave", onLeave);
+      });
+    };
+  }, []);
 
   return (
     <>
-      {/* Outer ring: centered via marginLeft/Top = -(size/2) */}
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-primary/30 pointer-events-none z-[9000] hidden md:block"
-        style={{ x: outerX, y: outerY, marginLeft: -16, marginTop: -16 }}
-      />
-      {/* Inner filled dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-primary pointer-events-none z-[9001] hidden md:block"
-        style={{ x: dotX, y: dotY, marginLeft: -3, marginTop: -3 }}
-      />
+      <div id="cursor-dot" ref={dotRef} aria-hidden="true" />
+      <div id="cursor-ring" ref={ringRef} aria-hidden="true" />
     </>
   );
 }

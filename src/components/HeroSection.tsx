@@ -1,91 +1,217 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Typed from "typed.js";
-import { motion, Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { heroData } from "@/config/data";
+import dynamic from "next/dynamic";
+
+// Client-only: particle sphere needs Three.js
+const ParticleSphere = dynamic(() => import("./ParticleSphere"), { ssr: false });
+
+/* ── Per-character reveal helper ── */
+function CharReveal({ text, delay = 0 }: { text: string; delay?: number }) {
+  return (
+    <>
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          initial={{ y: "110%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          transition={{
+            duration: 0.9,
+            delay: delay + i * 0.025,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          style={{ display: "inline-block" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </motion.span>
+      ))}
+    </>
+  );
+}
 
 export default function HeroSection() {
-  const el = useRef<HTMLSpanElement>(null);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    const typed = new Typed(el.current, {
-      strings: heroData.typedStrings,
-      typeSpeed: 50,
-      backSpeed: 30,
-      backDelay: 2000,
-      loop: true,
-      showCursor: true,
-      cursorChar: "|",
-      autoInsertCss: true,
-    });
-
-    return () => {
-      typed.destroy();
-    };
+    // Detect dark mode for particle color
+    const check = () => setIsDark(document.documentElement.classList.contains("dark"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
   }, []);
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
+  // Split name for display
+  const name = heroData.name.replace(/\.$/, ""); // "Rois Anwar"
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-24 md:pt-32 overflow-hidden">
-      <motion.div
-        className="space-y-5 hero-content relative z-10 w-full"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+    <section
+      id="hero"
+      style={{
+        position: "relative",
+        minHeight: "100svh",
+        display: "flex",
+        alignItems: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* 3D Particle sphere — positioned right/center */}
+      <div
+        style={{
+          position: "absolute",
+          right: "-5%",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "min(65vw, 700px)",
+          height: "min(65vw, 700px)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
       >
+        <ParticleSphere isDark={isDark} />
+      </div>
+
+      {/* Gradient fade — left side to show text */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to right, var(--c-bg) 45%, transparent 80%)",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Content */}
+      <div className="container" style={{ position: "relative", zIndex: 2, paddingTop: "80px", paddingBottom: "80px" }}>
+        {/* Role label */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="label"
+          style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "1.5rem" }}
+        >
+          <span style={{ display: "block", width: "32px", height: "1px", background: "var(--c-accent)" }} />
+          Software Engineer
+        </motion.div>
+
+        {/* Name — Bebas Neue, huge */}
+        <div style={{ overflow: "hidden", marginBottom: "2rem" }}>
+          <div
+            className="font-display"
+            style={{
+              fontSize: "clamp(5rem, 16vw, 16rem)",
+              lineHeight: 0.9,
+              color: "var(--c-text)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            <div style={{ overflow: "hidden" }}>
+              <CharReveal text={name.split(" ")[0]} delay={0.3} />
+            </div>
+            <div style={{ overflow: "hidden" }}>
+              <CharReveal text={name.split(" ")[1] || ""} delay={0.45} />
+              <motion.span
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.9, duration: 0.5, ease: "backOut" }}
+                style={{
+                  color: "var(--c-accent)",
+                  display: "inline-block",
+                  fontFamily: "var(--font-dm-sans), sans-serif",
+                  fontSize: "0.35em",
+                  lineHeight: 1,
+                  verticalAlign: "0.25em",
+                  marginLeft: "0.12em",
+                }}
+              >
+                •
+              </motion.span>
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
         <motion.p
-          variants={itemVariants}
-          className="font-mono text-[#4F46E5] dark:text-[#818CF8] tracking-widest"
-        >
-          {heroData.greeting}
-        </motion.p>
-        <motion.h1
-          variants={itemVariants}
-          className="text-5xl md:text-8xl font-bold text-[#334155] dark:text-[#F1F5F9] tracking-tight"
-        >
-          {heroData.name}
-        </motion.h1>
-        <motion.h2
-          variants={itemVariants}
-          className="text-4xl md:text-7xl font-bold text-[#64748B] dark:text-[#94A3B8] tracking-tight h-[80px] md:h-[100px]"
-        >
-          I build <span ref={el} className="text-[#4F46E5] dark:text-[#818CF8]"></span>
-        </motion.h2>
-        <motion.p
-          variants={itemVariants}
-          className="max-w-xl text-lg md:text-xl text-[#64748B] dark:text-[#94A3B8] leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            maxWidth: "400px",
+            fontFamily: "var(--font-dm-sans), sans-serif",
+            fontSize: "1rem",
+            lineHeight: 1.75,
+            color: "var(--c-text-2)",
+            marginBottom: "2.5rem",
+          }}
         >
           {heroData.description}
         </motion.p>
-        <motion.div variants={itemVariants} className="pt-10">
-          <a
-            href={heroData.ctaLink}
-            className="inline-block border-2 border-[#4F46E5] dark:border-[#818CF8] text-[#4F46E5] dark:text-[#818CF8] px-8 py-4 font-mono text-sm rounded hover:bg-[#4F46E5]/10 dark:hover:bg-[#818CF8]/10 transition-all duration-300"
-          >
-            {heroData.ctaText}
+
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0, duration: 0.6 }}
+          style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}
+        >
+          <a href="#work" className="btn-accent">
+            See my work
+          </a>
+          <a href="#contact" className="mag-btn">
+            <span>Get in touch</span>
           </a>
         </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4, duration: 0.5 }}
+        style={{
+          position: "absolute",
+          bottom: "2.5rem",
+          left: "2.5rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "0.75rem",
+          zIndex: 2,
+        }}
+      >
+        <span
+          className="label"
+          style={{ fontSize: "0.55rem" }}
+        >
+          Scroll
+        </span>
+        <div
+          style={{
+            width: "1px",
+            height: "48px",
+            background: "var(--c-accent)",
+            animation: "scroll-bounce 1.8s ease-in-out infinite",
+            transformOrigin: "top",
+          }}
+        />
       </motion.div>
+
+      {/* Bottom border */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "1px",
+          background: "var(--c-border)",
+        }}
+      />
     </section>
   );
 }
