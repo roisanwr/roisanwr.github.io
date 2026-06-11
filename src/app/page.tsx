@@ -1,30 +1,52 @@
 import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-import ScrollProgress from "@/components/ScrollProgress";
-import CustomCursor from "@/components/CustomCursor";
-import HeroSection from "@/components/HeroSection";
-import ProfileSection from "@/components/ProfileSection";
-import ExperienceSection from "@/components/ExperienceSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import ContactSection from "@/components/ContactSection";
+import HeroSignal from "@/components/HeroSignal";
+import BroadcastTicker from "@/components/BroadcastTicker";
+import AboutSignal from "@/components/AboutSignal";
+import TerminalExperience from "@/components/TerminalExperience";
+import ExpandableProjects from "@/components/ExpandableProjects";
+import ContactSignal from "@/components/ContactSignal";
 import Footer from "@/components/Footer";
+import CustomCursor from "@/components/CustomCursor";
+import ScrollProgress from "@/components/ScrollProgress";
+import HUDStatus from "@/components/HUDStatus";
 
 export default function Home() {
   return (
     <>
-      {/* Global UI chrome */}
       <CustomCursor />
       <ScrollProgress />
+      <HUDStatus />
       <Navbar />
-      <Sidebar />
 
-      {/* Page content */}
       <main>
-        <HeroSection />
-        <ProfileSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <ContactSection />
+        <HeroSignal />
+        <BroadcastTicker />
+        <AboutSignal />
+        <BroadcastTicker
+          items={[
+            "Experience",
+            "Lead Engineer",
+            "Studio Developer",
+            "UI Engineer",
+            "Upstatement",
+            "Apple",
+            "Scout",
+          ]}
+          speed={25}
+        />
+        <TerminalExperience />
+        <BroadcastTicker
+          items={[
+            "Selected Work",
+            "Open Source",
+            "Side Projects",
+            "Shipped to Production",
+            "Built with Passion",
+          ]}
+          speed={20}
+        />
+        <ExpandableProjects />
+        <ContactSignal />
       </main>
 
       <Footer />
