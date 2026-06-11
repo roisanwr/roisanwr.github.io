@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-surface: #ffffff;
+  --color-on-surface: #334155;
+  --color-surface-dark: #0B1120;
+  --color-on-surface-dark: #94A3B8;
+
+  --font-headline: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Space Grotesk', monospace;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+  overflow-x: hidden;
+}
+
+::selection {
+  @apply bg-[#4F46E5]/20 text-[#4F46E5] dark:bg-[#818CF8]/20 dark:text-[#818CF8];
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.vertical-text-orientation {
+  writing-mode: vertical-rl;
+}
+
+
