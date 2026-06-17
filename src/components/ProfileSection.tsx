@@ -39,8 +39,9 @@ export default function ProfileSection() {
             ))}
           </ul>
         </div>
-        <div className="md:col-span-2 flex justify-center">
-          <div className="relative group max-w-[300px] w-full">
+        <div className="md:col-span-2 flex justify-center self-start">
+          {/* pb-5 pr-5 gives the decorative frame room to overflow outside the image */}
+          <div className="relative group max-w-[300px] w-full pb-5 pr-5">
             {/* The image wrapper with a solid background to protect against dark voids */}
             <div className="relative bg-white dark:bg-slate-200 rounded overflow-hidden z-10">
               <img
@@ -50,9 +51,9 @@ export default function ProfileSection() {
               />
               <div className="absolute inset-0 bg-[#4F46E5]/10 dark:bg-[#818CF8]/10 group-hover:opacity-0 transition-opacity duration-300 pointer-events-none"></div>
             </div>
-            
-            {/* The decorative frame rendered ON TOP so it crosses the image reliably in both modes */}
-            <div className="absolute inset-0 border-2 border-[#4F46E5] dark:border-[#818CF8] rounded translate-x-5 translate-y-5 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform duration-300 pointer-events-none z-20"></div>
+
+            {/* Decorative frame: positioned relative to the wrapper, offset bottom-right */}
+            <div className="absolute top-5 left-5 bottom-0 right-0 border-2 border-[#4F46E5] dark:border-[#818CF8] rounded group-hover:translate-x-[-4px] group-hover:translate-y-[-4px] transition-transform duration-300 pointer-events-none z-20"></div>
           </div>
         </div>
       </div>

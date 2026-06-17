@@ -19,29 +19,29 @@ export const heroData = {
   greeting: "Hi, my name is",
   name: "Rois Anwar.", // Dummy placeholder
   typedStrings: [
-    "things for the web.",
-    "pixel-perfect UIs.",
-    "scalable applications.",
-    "interactive experiences.",
+    "intuitive UI.",
+    "Local AI models.",
+    "scalable systems.",
+    "smart AI tools.",
   ],
   description:
-    "I’m a software engineer specializing in building (and occasionally designing) exceptional digital experiences. Currently, I’m focused on building accessible, human-centered products at Upstatement.",
+    "I’m a developer passionate about turning ideas into working digital products. Driven by curiosity and adaptability, I am currently diving deep into full-stack development and local AI models.",
   ctaText: "Find more about me!",
   ctaLink: "https://github.com/roisanwr",
 };
 
 export const aboutData = {
   paragraphs: [
-    "Hello! My name is Rois and I enjoy creating things that live on the internet. My interest in web development started back in 2012 when I decided to try editing custom Tumblr themes — turns out hacking together a custom reblog button taught me a lot about HTML & CSS!",
-    "Fast-forward to today, and I’ve had the privilege of working at an advertising agency, a start-up, a huge corporation, and a student-led design studio. My main focus these days is building accessible, inclusive products and digital experiences at Upstatement for a variety of clients.",
+    "Hello! I'm Rois. My journey into software development wasn't a straight, predictable line. It actually started back in high school, driven by a simple ambition: I wanted to break into a newly formed IT division of a prominent student organization. That goal pushed me to scrap together my first lines of HTML and CSS, and hack my way through WordPress. It was messy and full of trial and error, but that raw desire to figure things out and build solutions became the foundation of my career.",
+    "There was a point where the rapid rise of AI made me question the future of software development, it felt like the industry was shrinking and traditional coding would soon become obsolete. But taking a step back, I realized a crucial truth while AI disrupts, it also drastically lowers the barrier to entry for those willing to adapt. I immersed myself in the AI ecosystem, mastering how to leverage it to build faster and smarter. Today, my focus isn't just on writing syntax; it's about integrating generative AI to optimize complex systems, and I am currently diving deep into building and deploying local AI models.",
   ],
   technologies: [
-    "JavaScript (ES6+)",
+    "JavaScript",
     "TypeScript",
     "React",
-    "Eleventy",
+    "Laravel",
     "Node.js",
-    "WordPress",
+    "Python",
   ],
   profileImage: "/images/fotoku.jpeg",
 };
@@ -109,7 +109,7 @@ export const contactData = {
   header: "04. What's Next?",
   title: "Get In Touch",
   description:
-    "Although I’m not currently looking for any new opportunities, my inbox is always open. Whether you have a question or just want to say hi, I’ll try my best to get back to you!",
+    "Although I’m currently open to new opportunities and projects. Whether you have a problem to solve, a system to build, or just want to talk about tech and AI or just want to say hi, my inbox is always open. feel free to reach out.",
   ctaText: "Say Hello",
   ctaLink: "mailto:hello@roisanwar44@gmail.com", // Dummy placeholder
 };
@@ -117,7 +117,6 @@ export const contactData = {
 export const footerData = {
   text: "Built by Rois Anwar",
   links: [
-    { label: "Design Strategy", href: "#" },
-    { label: "Documentation", href: "#" },
+     
   ],
 };
