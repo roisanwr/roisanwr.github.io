@@ -25,7 +25,7 @@ export default function ExperienceSection() {
           <span className="font-mono text-[#4F46E5] dark:text-[#818CF8] text-xl mr-2">
             02.
           </span>{" "}
-          Where I’ve Worked
+          My Experiences
         </h3>
         <div className="h-[1px] bg-[#E2E8F0] dark:bg-[#334155] flex-grow"></div>
       </div>

@@ -48,60 +48,67 @@ export const aboutData = {
 
 export const experienceData = [
   {
-    id: "upstatement",
-    company: "Upstatement",
-    role: "Lead Engineer",
-    duration: "May 2018 — Present",
+    id: "future-association",
+    company: "FUTURE (English Student Association)",
+    role: "President",
+    duration: "2021 — 2023",
     achievements: [
-      "Deliver high-quality, robust production code for a diverse array of projects for clients including Harvard Business School, Everytown for Gun Safety, and more.",
-      "Work closely with designers, artists, and other developers to transform creative concepts into production realities for clients and stakeholders.",
-      "Provide leadership within engineering department through close collaboration, knowledge shares, and mentorship.",
+    "Led the student association for two consecutive years, orchestrating language development programs and fostering a culture of English proficiency.",
+    "Directed organizational strategy and managed team coordination to execute impactful student-led initiatives.",
     ],
   },
   {
-    id: "scout",
-    company: "Scout",
-    role: "Studio Developer",
-    duration: "Jan 2018 — April 2018",
+    id: "pondok-it",
+    company: "Pondok IT Oase Ilmu",
+    role: "UI/UX & Multimedia Design Instructor",
+    duration: "Jul 2024 — 2025",
     achievements: [
-      "Collaborated with a small team of student designers to spearhead a new brand and design system for Scout’s inaugural student-led design conference at Northeastern.",
-      "Worked closely with designers and management team to develop, document, and manage the conference’s marketing website using Jekyll, Sass, and JavaScript.",
+    "Developed and executed an end-to-end multimedia curriculum covering UI/UX principles, graphic design, and video editing tailored specifically for junior high school students.",
+    "Mentored students by translating complex digital product design concepts into accessible learning modules, fostering early technical literacy and creative problem-solving skills.",
+    "Managed end-to-end classroom facilitation, ensuring clear delivery of technical materials and guiding students through practical, hands-on digital projects.",
     ],
   },
   {
-    id: "apple",
-    company: "Apple",
-    role: "UI Engineer Co-op",
-    duration: "July 2017 — Dec 2017",
+    id: "mada-wikri",
+    company: "PT Mada Wikri Tunggal",
+    role: "Full-Stack Developer Intern",
+    duration: "Feb 2026 — Present",
     achievements: [
-      "Developed and shipped highly interactive web applications for Apple Music using Ember.js.",
-      "Built and shipped the Apple Music Extension within Facebook Messenger leveraging third-party and internal APIs.",
+    "Supported the digitalization of manual company workflows by developing and maintaining internal web applications.",
+    "Provided daily IT support and direct troubleshooting for hardware, software, and network issues across departments.",
+    "Assisted in designing UI/UX and creating multimedia assets for the company.",
     ],
   },
+
 ];
 
 export const workData = [
   {
-    title: "Halcyon Theme",
-    isFeatured: true,
-    description:
-      "A minimal, dark blue theme for VS Code, Sublime Text, Atom, iTerm, and more. Available on Visual Studio Marketplace, Package Control, Atom Package Manager, and npm.",
-    tech: ["VS Code", "Sublime Text", "Atom", "iTerm2", "Hyper"],
-    githubLink: "#",
-    externalLink: "#",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA0MG-mRuQoD2Jh-fTp-fMtSIto7CG1iqeap1cLNHM1tXZlqxWKUZZu43NkzR6W-KS7RiKOqZobzf4XWR7pGVPnm5K70nGdTAjn-NAkzM1MV3p-8XSeLmtAWBla0oCkZd4bPmjztFXrvV65XOZ66qH9MtWt3IxFUfgFOY3ereQ4ldOFBeX5BEgyv-eViuHD68EXAVGWQJ6-rfkikBX9iXf-5tbW-vAU6l3xTAx4gokfpjSzB-zF4ezUQNX-_Gs5oZpu75ZmQG2TnUc",
+  title: "MyKanz - Personal Finance & Portfolio Tracker",
+  isFeatured: true,
+  description: "A comprehensive personal finance application to centrally track cash flows across multiple wallets. It integrates a live-pricing investment dashboard to monitor real-time asset performance, and streamlines data entry through a Smart Wallet Routing system that automatically logs transactions via Gmail Push notifications and a Telegram bot.",
+  tech: ["Next.js", "Prisma", "Gmail API", "Telegram Bot"],
+  githubLink: "#",
+  externalLink: "#",
+  image: "link-gambar-disini",
   },
   {
-    title: "Spotify Profile",
-    isFeatured: true,
-    description:
-      "A web app for visualizing personalized Spotify data. View your top artists, top tracks, recently played tracks, and detailed audio information about each track.",
-    tech: ["React", "Styled Components", "Spotify API", "Heroku"],
-    githubLink: "#",
-    externalLink: "#",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAX4Vy_SzSnWlRYwKkvY_J9s6w2N_0qJtfffLqQ2Ea-KYQCzjvuV89y4aB4mD21MbgXcjqnnMEEiZ5QH9nRK5cV2eUSvZpDWjG3jN9SO3-_qgh7AfqRRDbN1qGRV7EzNVQD1m6vuRfA0jx-3IRtHhJTtAAz2nbFUa5ILkSdjwB44hjWkKSzI-MMsXoyKIKXCs8Vzbf5ap0avCa_JpEqWW4JAwGJEifhICLXUmyq4iItgb7eADPgBH_Zgn-CGTKUFWoeruraJXHMpO8",
+  title: "Permit & Compliance Portal",
+  isFeatured: true,
+  description: "A unified platform that streamlines corporate compliance by centralizing permit document management across multiple plant locations. It features an interactive map and progress dashboard to visualize geographical distribution and monitor real-time approval statuses, alongside an automated background alert system that proactively notifies stakeholders of expirations via Email and WhatsApp.",
+  tech: ["Maps API", "WhatsApp API", "Email API", "Background Jobs"],
+  githubLink: "#",
+  externalLink: "#",
+  image: "link-gambar-disini",
+  },
+  {
+  title: "BitMove - Gamified Fitness & Mission Platform",
+  isFeatured: true,
+  description: "A gamified fitness and workout tracking platform designed to deliver an interactive experience for users managing daily quests and training programs. It integrates secure authentication and a robust data architecture, alongside an interactive analytics dashboard to visualize workout progress and track performance quotas effectively.",
+  tech: ["Next.js", "React", "Supabase", "Prisma", "Next-Auth", "Recharts"],
+  githubLink: "#",
+  externalLink: "#",
+  image: "link-gambar-disini",
   },
 ];
 
