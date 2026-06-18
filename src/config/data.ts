@@ -23,7 +23,7 @@ export const siteConfig = {
     github: "https://github.com/roisanwr",
     linkedin: "https://linkedin.com/",
     twitter: "https://twitter.com/",
-    codepen: "https://codepen.io/",
+    instagram: "https://instagram.com/roisanwr",
   },
 };
 

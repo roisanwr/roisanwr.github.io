@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/data";
-import { FaGithub, FaLinkedin, FaTwitter, FaCodepen } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 import { Moon, Sun } from "lucide-react";
 
 export default function Sidebar() {
@@ -64,11 +64,11 @@ export default function Sidebar() {
           </a>
           <a
             className="text-[#64748B] dark:text-[#94A3B8] hover:text-[#4F46E5] dark:hover:text-[#818CF8] hover:-translate-y-1 transition-transform"
-            href={siteConfig.socials.codepen}
+            href={siteConfig.socials.instagram}
             target="_blank"
             rel="noreferrer"
           >
-            <FaCodepen size={20} />
+            <FaInstagram size={20} />
           </a>
           <div className="h-24 w-[1px] bg-[#94A3B8]"></div>
         </div>

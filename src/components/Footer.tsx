@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaLinkedin, FaTwitter, FaCodepen } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 import { siteConfig, footerData } from "@/config/data";
 
 export default function Footer() {
@@ -27,9 +27,9 @@ export default function Footer() {
         </a>
         <a
           className="text-[#64748B] dark:text-[#94A3B8] hover:text-[#4F46E5] dark:hover:text-[#818CF8]"
-          href={siteConfig.socials.codepen}
+          href={siteConfig.socials.instagram}
         >
-          <FaCodepen size={20} />
+          <FaInstagram size={20} />
         </a>
       </div>
       <p className="font-mono text-xs text-[#64748B] dark:text-[#94A3B8] mb-2 hover:text-[#4F46E5] dark:hover:text-[#818CF8] cursor-pointer transition-colors">
