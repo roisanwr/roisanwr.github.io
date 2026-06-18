@@ -1,3 +1,15 @@
+// ============================================================
+// PROJECT IMAGES
+// Ganti nama atau path gambar proyek di sini — satu tempat aja.
+// File gambar ada di: public/images/projects/
+// ============================================================
+export const projectImages = {
+  myKanz:     "/images/projects/MyKanz.png",
+  monitoring: "/images/projects/Monitoring.png",
+  bitMove:    "/images/projects/Bitmove.png",
+  sipirang:   "/images/projects/Sipirang.png",
+};
+
 export const siteConfig = {
   name: "Rois", // Dummy placeholder, change later
   email: "roisanwar44@gmail.com", // Dummy placeholder
@@ -90,7 +102,7 @@ export const workData = [
   tech: ["Next.js", "Prisma", "Gmail API", "Telegram Bot"],
   githubLink: "#",
   externalLink: "#",
-  image: "link-gambar-disini",
+  image: projectImages.myKanz,
   },
   {
   title: "Permit & Compliance Portal",
@@ -99,7 +111,7 @@ export const workData = [
   tech: ["Maps API", "WhatsApp API", "Email API", "Background Jobs"],
   githubLink: "#",
   externalLink: "#",
-  image: "link-gambar-disini",
+  image: projectImages.monitoring,
   },
   {
   title: "BitMove - Gamified Fitness & Mission Platform",
@@ -108,7 +120,7 @@ export const workData = [
   tech: ["Next.js", "React", "Supabase", "Prisma", "Next-Auth", "Recharts"],
   githubLink: "#",
   externalLink: "#",
-  image: "link-gambar-disini",
+  image: projectImages.bitMove,
   },
 ];
 
