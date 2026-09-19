@@ -135,7 +135,5 @@ export const contactData = {
 
 export const footerData = {
   text: "Built by Rois Anwar",
-  links: [
-     
-  ],
+  links: [] as { label: string; href: string }[],
 };
